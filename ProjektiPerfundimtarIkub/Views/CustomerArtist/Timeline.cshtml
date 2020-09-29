@@ -1,0 +1,49 @@
+﻿@model IEnumerable<BuyArt.DomainModels.Artwork>
+
+@{
+  ViewBag.Title = "Timeline";
+}
+
+<div class="bg-danger">
+  <br />
+  <h2 class="text-center text-white">Timeline</h2>
+  <br />
+</div>
+
+<div class="container">
+  <div class="row justify-content-center">
+    @foreach (BuyArt.DomainModels.Artwork artwork in Model)
+    {<div class="row">
+        <div class="col" style="margin:20px">
+          <div class="card" style="width: 50rem; padding:5px; background-color:#f7f5f5;">
+            <img src="~/Content/Images/Artworks/@(artwork.Photo)" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h3 class="card-title"><b>@artwork.Title</b></h3>
+              @if (artwork.AvailabilityStatus == true)
+              {
+                <h4 class="float-right text-success font-weight-bolder">@artwork.Price lekë</h4>
+              }
+              else
+              {
+                <h4 class="float-right text-danger font-weight-bolder">SOLD</h4>
+              }
+              <p class="card-text">
+                <h6>@artwork.ArworkCategory.CategoryName by @artwork.Artist.UserName</h6>
+              </p>
+              <hr />
+              @Html.ActionLink("Details", "Details", "Artwork", new { id = artwork.ArtworkId }, new { @class = "btn btn-dark" })
+              @if (User.IsInRole("Customer") && artwork.AvailabilityStatus == true)
+              {
+                <a href="/Customer/Cart/AddArtworkToMyCart/@artwork.ArtworkId" class="btn btn-warning text-white fa-pull-right"><i class="fas fa-shopping-cart"></i> Add to Cart </a>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+</div>
+
+
+

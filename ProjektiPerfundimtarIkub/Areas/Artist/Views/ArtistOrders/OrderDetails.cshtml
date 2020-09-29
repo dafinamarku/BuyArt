@@ -1,0 +1,78 @@
+﻿@model BuyArt.DomainModels.Order
+@{
+  ViewBag.Title = "OrderDetails";
+}
+
+<div>
+  <br />
+  <h2 class="text-center">Order Details</h2>
+</div>
+<hr />
+<br /><br />
+<div class="container d-flex justify-content-center">
+  @Html.DisplayFor(x => Model)
+</div>
+<br /> <br />
+<div class="container d-flex justify-content-center form-inline">
+  @if (Model.OrderStatus == "Ordered")
+  {
+  <div>
+    <a href="/Artist/ArtistOrders/StartDeliveringOrder/@Model.OrderID" class="btn btn-primary">Start Delivering</a> &nbsp;&nbsp;
+    <button type="button" onclick="AddFormAction('/Artist/ArtistOrders/RejectOrder/'+@Model.OrderID,'Reject');" data-toggle="modal" data-target="#deleteOrder" class="btn btn-danger">Reject</button>
+  </div>
+  }
+  else
+  {
+    if (Model.OrderStatus == "Canceled")
+    {
+      <button type="button" onclick="AddFormAction('/Artist/ArtistOrders/DeleteOrder/'+@Model.OrderID,'Delete');" data-toggle="modal" data-target="#deleteOrder" class="btn btn-dark">Delete Order</button>
+    }
+    else if (Model.OrderStatus == "Delivering")
+    {
+      <a href="/Artist/ArtistOrders/MarkAsDelivered/@Model.OrderID" class="btn btn-success">Mark as Delivered</a>
+    }
+  }
+  &nbsp;
+  &nbsp;
+  <a href="/Artist/ArtistOrders/Orders" class="card-link">Back to My Orders</a>
+
+</div>
+<!-- Delete Order Modal -->
+<div class="modal fade" id="deleteOrder" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modalBody">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <form action="" id="deleteOrderForm">
+          <button type="submit" class="btn btn-danger" id="modalButton"> </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    function AddFormAction(actionUrl, action) {
+      if (action == 'Delete') {
+        document.getElementById('modalBody').innerHTML = 'Are you sure you want to delete the order?';
+        document.getElementById('modalButton').innerHTML = 'Delete Order';
+        document.getElementById('modalTitle').innerHTML = 'Delete Order?';
+      }
+      else {
+        if (action == 'Reject') {
+          document.getElementById('modalBody').innerHTML = 'Are you sure you want to reject the order?';
+          document.getElementById('modalButton').innerHTML = 'Reject';
+          document.getElementById('modalTitle').innerHTML = 'Reject Order?';
+        }
+      }
+      document.getElementById('deleteOrderForm').action = actionUrl;
+    }
+</script>

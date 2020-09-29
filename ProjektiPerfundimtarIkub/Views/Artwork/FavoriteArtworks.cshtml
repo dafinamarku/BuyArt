@@ -1,0 +1,71 @@
+﻿@model IEnumerable<BuyArt.DomainModels.Artwork>
+@{
+  ViewBag.Title = "Favorite Artworks";
+}
+
+<div>
+  <br />
+  <h2 class="text-center">Favorites</h2>
+</div>
+<hr />
+@if (Model.Count() == 0)
+{
+  <div class="container text-center">
+    <p class="card-text" style="color:cornflowerblue; font-size:larger">
+      You have no favorite artworks.
+    </p>
+  </div>
+}
+else
+{
+  <div class="container">
+    <div class="row">
+      @Html.DisplayFor(x => Model)
+    </div>
+    <br />
+
+    <table class="table">
+      <tr>
+        <td colspan="9">
+          @{
+            int PrevPageNo = ViewBag.PageNo - 1;
+            if (PrevPageNo <= 0)
+            {
+              PrevPageNo = 1;
+            }
+
+            int NextPageNo = ViewBag.PageNo + 1;
+            if (NextPageNo > ViewBag.NoOfPages)
+            {
+              NextPageNo = ViewBag.NoOfPages;
+            }
+          }
+          <ul class="pagination justify-content-center">
+            <li class="page-item">
+              <a class="page-link text-dark" href="/Artwork/FavoriteArtworks?PageNo=@PrevPageNo"><i class="fas fa-angle-double-left"></i></a>
+            </li>
+            @for (int i = 0; i < ViewBag.NoOfPages; i++)
+            {
+              if ((i + 1) == ViewBag.PageNo)
+              {
+                <li class="page-item">
+                  @*faqja aktive*@
+                  <a class="page-link bg-dark text-white" href="/Artwork/FavoriteArtworks?PageNo=@(i + 1)">@( i + 1)</a>
+                </li>
+              }
+              else
+              {
+                <li class="page-item">
+                  <a class="page-link text-dark" href="/Artwork/FavoriteArtworks?PageNo=@(i + 1)">@( i + 1)</a>
+                </li>
+              }
+            }
+            <li class="page-item">
+              <a class="page-link text-dark" href="/Artwork/FavoriteArtworks?PageNo=@NextPageNo"><i class="fas fa-angle-double-right"></i></a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </div>
+}

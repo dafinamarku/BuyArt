@@ -1,0 +1,124 @@
+﻿@model ProjektiPerfundimtarIkub.ViewModels.ArtistProfileViewModel
+@using Microsoft.AspNet.Identity
+@{
+  ViewBag.Title = "MyProfile";
+}
+
+<link href="~/Styles/Profili/responsive.css" rel="stylesheet" />
+<link href="~/Styles/Profili/styles.css" rel="stylesheet" />
+<style>
+
+  img {
+    margin: 5px;
+    padding: 5px;
+  }
+
+  .flex-column {
+    max-width: 260px;
+  }
+</style>
+<div class="container">
+  <br />
+  @Html.Partial("_Notifications")
+</div>
+<br />
+<section>
+  <div class="container">
+    <div class="row">
+      <h4><b>@Model.user.UserName </b> </h4>
+    </div>
+    <div class="row">
+      <h4><b>EMAIL : </b>@Model.user.Email </h4>
+    </div>
+  </div><!-- container -->
+</section><!-- intro-section -->
+<br />
+<div class="container">
+  <div class="row">
+    <ul class="list-group list-group-horizontal" style="text-align:center;">
+      <li class="list-group-item list-group-item-action list-group-item-light">
+        <button type="button" data-toggle="modal" data-target="#FollowingList" class="nav-link">
+          <b>Following</b><br /> @Model.nrfollowing
+        </button>
+      </li>
+    </ul>
+    <div class="col">
+      <a href="/CustomerArtist/EditProfile" class="btn btn-dark btn-lg fa-pull-right"><i class="fas fa-user-edit"></i></a>
+    </div>
+  </div>
+  <br />
+  <div class="row"></div>
+  <div class="row">
+    <div class="col-12">
+      <a href="/Customer/Orders/MyOrders" class="btn btn-outline-info btn-block btn-lg">My Orders</a>
+      <a href="/Artwork/FavoriteArtworks" class="btn btn-outline-danger btn-block btn-lg">Favorites <i class="fas fa-heart"></i></a>
+      <a href="#" class="btn btn-outline-dark btn-block btn-lg">My Cart <i class="fas fa-shopping-cart"></i></a>
+    </div>
+  </div>
+</div>
+<!-- Seksioni i Bio-s afishohet vetem ku ajo nuk eshte null -->
+@if (Model.user.Bio != null)
+{
+  <section class="about-section section">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="heading">
+            <h3><b>Bio</b></h3>
+          </div>
+        </div>
+        <div class="col-sm-8">
+          <p class="margin-b-50">
+            @Model.user.Bio
+          </p>
+        </div><!-- col-sm-8 -->
+      </div><!-- row -->
+    </div><!-- container -->
+  </section><!-- about-section -->
+}
+
+<!-- Following Modal -->
+<div class="modal fade" id="FollowingList" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Following</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        @if (Model.user.Following.Count == 0)
+        {
+          <div style="color:cornflowerblue;">0 Following</div>
+        }
+        else
+        {
+          <table class="table table-hover">
+            @foreach (var f in Model.user.Following)
+            {
+              <tr>
+                <td>
+                  @f.UserName
+                </td>
+                @if (f.Id == User.Identity.GetUserId())
+                {
+                  <td><a href="/CustomerArtist/VisitProfile/@f.Id">My Profile</a></td>
+                }
+                else
+                {
+                  <td><a href="/CustomerArtist/VisitProfile/@f.Id">Visit Profile</a></td>
+                }
+              </tr>
+            }
+          </table>
+        }
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

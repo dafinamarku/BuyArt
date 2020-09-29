@@ -1,0 +1,61 @@
+﻿@model ProjektiPerfundimtarIkub.ViewModels.RegisterViewModel
+
+@{
+  ViewBag.Title = "Create";
+}
+<br />
+<h2>Create New User</h2>
+@using (Html.BeginForm("Create", "Users", FormMethod.Post))
+{
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      @Html.LabelFor(temp => temp.Username)
+      @Html.TextBoxFor(temp => temp.Username, new { placeholder = "Username", @class = "form-control" })
+      @Html.ValidationMessageFor(temp => temp.Username, null, new { @class = "text-danger" })
+    </div>
+    <div class="form-group col-md-6">
+      @Html.LabelFor(temp => temp.Password)
+      @Html.PasswordFor(temp => temp.Password, new { placeholder = "Password", @class = "form-control" })
+      @Html.ValidationMessageFor(temp => temp.Password, null, new { @class = "text-danger" })
+    </div>
+    <div class="form-group col-md-6">
+      @Html.LabelFor(temp => temp.ConfirmPassword)
+      @Html.PasswordFor(temp => temp.ConfirmPassword, new { placeholder = "Confirm Password", @class = "form-control" })
+      @Html.ValidationMessageFor(temp => temp.ConfirmPassword, null, new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group col-md-6">
+      @Html.LabelFor(temp => temp.Email)
+      @Html.TextBoxFor(temp => temp.Email, new { placeholder = "Email", @class = "form-control" })
+      @Html.ValidationMessageFor(temp => temp.Email, null, new { @class = "text-danger" })
+    </div>
+
+
+    <div class="form-group col-md-6">
+      @Html.LabelFor(temp => temp.Bio)
+      @Html.TextAreaFor(temp => temp.Bio, new { placeholder = "Bio", @class = "form-control" })
+    </div>
+
+    <div class="form-group col-md-6">
+      @Html.LabelFor(temp => temp.ProfileType)
+      <select name="ProfileType" id="ProfileType" class="form-control">
+        <option value="Artist">Artist</option>
+        <option value="Customer">Customer</option>
+        <option value="Admin">Admin</option>
+      </select>
+      @Html.ValidationMessageFor(temp => temp.ProfileType, null, new { @class = "text-danger" })
+    </div>
+  </div>
+  <div class="form-group text-danger">
+    @Html.ValidationSummary()
+  </div>
+
+
+  <button type="submit" class="btn btn-success">Create</button>
+  @Html.ActionLink("Cancel", "Index", "Users", new { @class = "btn btn-light" })
+}
+
+
+
+
+

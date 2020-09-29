@@ -1,0 +1,251 @@
+﻿@model BuyArt.DomainModels.Artwork
+@using Microsoft.AspNet.Identity
+@using BuyArt.DataLayer
+@{
+  ViewBag.Title = "Details";
+}
+<div class="container">
+  <br />
+  @Html.Partial("_Notifications")
+</div>
+<div class="container">
+  <br />
+  <div class="row">
+    <div class="col-5">
+      <img src="~/Content/Images/Artworks/@(Model.Photo)" width="550px" style="max-height: 900px" />
+    </div>
+    <div class="col-1"></div>
+    <div class="col-6">
+      <div class="card">
+        <div class="card-body">
+          <p class="card-title">
+            <h2>@Html.DisplayFor(model => model.Title)</h2>
+            <h5 style="text-align:right">by <a href="@Url.Action("VisitProfile", "CustomerArtist", new { id=Model.ArtistId})">@Html.DisplayFor(model => model.Artist.UserName)</a> </h5>
+          </p>
+          <p class="card-text">
+            <b>@Html.DisplayNameFor(model => model.ArworkCategory.CategoryName):</b> @Html.DisplayFor(model => model.ArworkCategory.CategoryName) <br />
+            <b>@Html.DisplayNameFor(model => model.ArtworkSubject.SubjectName):</b> @Html.DisplayFor(model => model.ArtworkSubject.SubjectName)<br />
+            <b>@Html.DisplayNameFor(model => model.Height):</b> @Html.DisplayFor(model => model.Height) cm <br />
+            <b>@Html.DisplayNameFor(model => model.Width):</b> @Html.DisplayFor(model => model.Width) cm<br />
+            <b>@Html.DisplayNameFor(model => model.Price):</b> @Html.DisplayFor(model => model.Price) lekë  <br />
+            <b>Styles:</b>
+            @foreach (var i in Model.ArtworkStyles)
+            {
+              <div>@Html.DisplayFor(model => i.StyleName) &nbsp; </div>
+            }
+            @if (Model.AvailabilityStatus == false)
+            {
+              <h4 class="float-right text-danger font-weight-bolder">SOLD</h4><br />
+            }
+            <hr />
+            <b> @Html.DisplayNameFor(model => model.Description):</b> <br />
+          </p>
+          @if (Model.Description == null)
+          {
+            <p style="color:cornflowerblue;">This artwork doesn't have a description.</p>
+          }
+          else
+          {
+            <p class="card-text">@Html.DisplayFor(model => model.Description)</p>
+          }
+        </div>
+      </div>
+
+      @if (User.Identity.GetUserId() == Model.Artist.Id)
+      {
+
+        if (Model.AvailabilityStatus==true)
+        {
+          <br />
+          <div class="row justify-content-center">
+            <a href="/Artist/Artworks/Edit/@Model.ArtworkId" class="btn btn-warning text-white"><i class="fas fa-pencil-alt"></i></a> &nbsp;
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt"></i> </button>
+          </div>
+        }
+
+      }
+      else
+      {
+        if (User.IsInRole("Customer") && Model.AvailabilityStatus == true)
+        {
+          <br />
+          <div class="row justify-content-center">
+            <a href="/Customer/Orders/OrderArtwork/@Model.ArtworkId" class="btn btn-outline-success">Order Artwork</a> &nbsp;
+            <a href="#" class="btn btn-warning text-white fa-pull-right"><i class="fas fa-shopping-cart"></i> Add to Cart </a>
+          </div>
+        }
+      }
+      <br />
+      @if (Request.IsAuthenticated && (User.IsInRole("Artist") || User.IsInRole("Customer")))
+      {
+        <div class="card">
+          <div class="card-body">
+            <div>
+              @if (ViewBag.DoesUserLikeArtwork == false)
+              {
+                <a href="/Artwork/LikeOrUnlikeArtwork/@Model.ArtworkId">
+                  <i class="far fa-heart text-danger fa-2x fa-align-center"></i>
+                </a>
+
+              }
+              else
+              {
+                <a href="/Artwork/LikeOrUnlikeArtwork/@Model.ArtworkId">
+                  <i class="fas fa-heart text-danger fa-2x fa-align-center"></i>
+                </a>
+              }
+
+              <button type="button" class="btn btn-link text-dark" data-toggle="modal" data-target="#LikesModal">
+                <b style="font-size:larger">@ViewBag.NrOfLikes Likes...</b>
+              </button>
+            </div>
+            <hr />
+            @if (Model.Comments.Where(x => x.CommentOrLike == "comment").Count() == 0)
+            {
+              <p class="card-text" style="color:cornflowerblue;">
+                This artwork doesn't have any comments.
+              </p>
+            }
+            else
+            {
+              <div class="overflow-auto" style="height:150px;">
+                <p class="card-text">
+                  @foreach (var comment in Model.Comments.Where(x => x.CommentOrLike == "comment").OrderByDescending(x => x.id).ToList())
+                  {
+                    <b>@comment.Author.UserName</b>
+                    if (comment.AuthorId == User.Identity.GetUserId())
+                    {
+                      <div class="float-right">
+                        <button type="button" onclick="AddFormAction('/Comment/Delete/'+@comment.id)" class="btn btn-link" data-toggle="modal" data-target="#deleteComment"><i class="far fa-trash-alt"></i></button>
+                      </div>
+                    }<br />
+                    @comment.CommentText
+                    <hr />
+
+                  }
+                </p>
+              </div>
+            }
+            <hr />
+            @using (Html.BeginForm("CommentArtwork", "Comment", FormMethod.Get))
+            {
+              <div class="form-inline ">
+                @Html.TextBox("commentText", null, new { artworkId = Model.ArtworkId, @class = "form-control", @placeholder = "Comment..." }) &nbsp;
+                <input type="hidden" value="@Model.ArtworkId" name="artworkId" />
+                <button type="submit" class="btn btn-dark">Comment</button>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <br />
+      <br />
+    </div>
+  </div>
+</div>
+
+@if (ViewBag.IsOrdered == false && Request.IsAuthenticated)
+{
+  <!-- Delete Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Delete?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete @Model.Title??
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <form action="/Artist/Artworks/Delete/@Model.ArtworkId" method="post">
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (Request.IsAuthenticated && (User.IsInRole("Artist") || User.IsInRole("Customer")))
+{
+  <!-- Likes List Modal -->
+  <div class="modal fade" id="LikesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Liked by</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-hover">
+            @{ string currentUid = User.Identity.GetUserId();
+              ProjectContext db = new ProjectContext();
+              ApplicationUserStore ustore = new ApplicationUserStore(db);
+              ApplicationUserManager uManager = new ApplicationUserManager(ustore);
+            }
+            @foreach (var i in Model.Comments.Where(x => x.CommentOrLike == "like" && x.Like == true))
+            {
+              <tr>
+                <td>@i.Author.UserName</td>
+                @if (currentUid == i.AuthorId)
+                {
+                  <td><a href="/CustomerArtist/VisitProfile/@i.AuthorId">My Profile</a></td>
+                }
+                else if (uManager.IsInRole(i.AuthorId, "Customer"))
+                {//profilet e userave qe jane ne rol customer nuk mund te vizitohen
+                  <td></td>
+                }
+                else if (uManager.IsInRole(i.AuthorId, "Artist"))
+                {
+                  <td><a href="/CustomerArtist/VisitProfile/@i.AuthorId">Visit Profile</a></td>
+                }
+              </tr>
+            }
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+}
+@if (Request.IsAuthenticated && !User.IsInRole("Admin"))
+{
+  <!-- Delete Comment Modal -->
+  <div class="modal fade" id="deleteComment" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete the comment?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <form action="" id="deleteCommentForm" method="post">
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function AddFormAction(actionUrl) {
+      document.getElementById('deleteCommentForm').action = actionUrl;
+    }
+  </script>
+
+}

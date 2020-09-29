@@ -1,0 +1,54 @@
+﻿@model BuyArt.DomainModels.ApplicationUser
+
+@{
+    ViewBag.Title = "Details";
+}
+<br />
+<h2>@Model.UserName's Details</h2>
+<br />
+<div class="container">
+  <table class="table">
+    <tr>
+      <th>
+        @Html.DisplayNameFor(u => u.Id):
+      </th>
+      <td>
+        @Html.DisplayFor(u => u.Id)
+      </td>
+    </tr>
+    <tr>
+      <th> Roles:</th>
+      <td>
+        @foreach (var i in ViewBag.Roles)
+        {
+          @i
+        }
+      </td>
+    </tr>
+    <tr>
+      <th>
+        @Html.DisplayNameFor(u => u.UserName):
+      </th>
+      <td>  @Html.DisplayFor(u => u.UserName)</td>
+    </tr>
+    <tr>
+      <th>
+        @Html.DisplayNameFor(u => u.Email):
+      </th>
+      <td>
+        @Html.DisplayFor(u => u.Email)
+      </td>
+    </tr>
+    <tr>
+      <th>
+        @Html.DisplayNameFor(u => u.Bio):
+      </th>
+      <td>
+        @Html.DisplayFor(u => u.Bio)
+      </td>
+    </tr>
+  </table>
+  <br />
+  @Html.ActionLink("Back to List", "Index", "Users", new { @class = "btn btn-light" })
+</div>
+

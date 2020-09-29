@@ -1,0 +1,198 @@
+﻿@model IEnumerable<BuyArt.DomainModels.Order>
+@{
+  ViewBag.Title = "Orders";
+}
+
+
+<div class="container">
+  <br />
+  @Html.Partial("_Notifications")
+</div>
+
+<div>
+  <br />
+  <h2 class="text-center">Orders</h2>
+</div>
+<hr />
+
+<div>
+  <form action="@Url.Action("Orders", "ArtistOrders")" method="get" id="form1">
+    <div class="float-right form-inline">
+      @Html.TextBox("search", null, new { @class = "form-control", @placeholder = "Search..." }) &nbsp; &nbsp;
+      <button type="submit" class="btn btn-dark">Search</button>
+    </div>
+  </form>
+  <br /><br /><br />
+  @if (Model.Count() == 0)
+  {
+    <div class="text-center">
+      <p class="card-text" style="color:cornflowerblue; font-size:larger">
+        You have no order.
+      </p>
+    </div>
+  }
+  else
+  {
+    <table class="table table-hover">
+      <tr>
+        <th>Artwork Title</th>
+        <th>@Html.DisplayNameFor(m => m.OrderedArtwork.Price)</th>
+        <th>@Html.DisplayNameFor(m => m.RequiredDate)</th>
+        <th>@Html.DisplayNameFor(m => m.OrderStatus)</th>
+        <th></th>
+      </tr>
+      @foreach (var i in Model)
+      {
+        if (i.OrderStatus == "Canceled")
+        {
+          <tr class="bg-danger text-white">
+            <td>@Html.DisplayFor(m => i.OrderedArtwork.Title)</td>
+            <td>@Html.DisplayFor(m => i.OrderedArtwork.Price) leke</td>
+            <td>@Html.DisplayFor(m => i.RequiredDate)</td>
+            <td class="font-weight-bolder">
+              @Html.DisplayFor(m => i.OrderStatus)
+            </td>
+            <td>
+              <a href="/Artist/ArtistOrders/OrderDetails/@i.OrderID" class="btn btn-info">Details</a> &nbsp;
+              <button type="button" onclick="AddFormAction('/Artist/ArtistOrders/DeleteOrder/'+@i.OrderID,'Delete');" data-toggle="modal" data-target="#deleteOrder" class="btn btn-dark">Delete Order</button>
+            </td>
+          </tr>
+        }
+        else
+        {
+          <tr>
+            <td>@Html.DisplayFor(m => i.OrderedArtwork.Title)</td>
+            <td>@Html.DisplayFor(m => i.OrderedArtwork.Price) leke</td>
+            <td>@Html.DisplayFor(m => i.RequiredDate)</td>
+
+            @if (i.OrderStatus == "Delivered")
+            {
+              <td class="text-success font-weight-bolder">
+                @Html.DisplayFor(m => i.OrderStatus)
+                <i class="fas fa-check fa-2x"></i>
+              </td>
+              <td>
+                <a href="/Artist/ArtistOrders/OrderDetails/@i.OrderID" class="btn btn-info">Details</a>
+              </td>
+            }
+            else
+            {
+              if (i.OrderStatus == "Delivering")
+              {
+                <td class="text-info font-weight-bolder">
+                  @Html.DisplayFor(m => i.OrderStatus)
+                  <img src="~/Content/PhotoDesign/delivering.gif" style="width:60px;" />
+                </td>
+                <td>
+                  <a href="/Artist/ArtistOrders/OrderDetails/@i.OrderID" class="btn btn-info">Details</a> &nbsp;
+                  <a href="/Artist/ArtistOrders/MarkAsDelivered/@i.OrderID" class="btn btn-success">Mark as Delivered</a>&nbsp;
+                  <button type="button" onclick="AddFormAction('/Artist/ArtistOrders/RejectOrder/'+@i.OrderID,'Reject');" data-toggle="modal" data-target="#deleteOrder" class="btn btn-danger">Reject</button>
+                </td>
+
+              }
+              else//Status==Ordered
+              {
+                <td class="font-weight-bolder">@Html.DisplayFor(m => i.OrderStatus)</td>
+                <td>
+                  <a href="/Artist/ArtistOrders/OrderDetails/@i.OrderID" class="btn btn-info">Details</a>&nbsp;
+                  <a href="/Artist/ArtistOrders/StartDeliveringOrder/@i.OrderID" class="btn btn-primary">Start Delivering</a>&nbsp;
+                  <button type="button" onclick="AddFormAction('/Artist/ArtistOrders/RejectOrder/'+@i.OrderID,'Reject');" data-toggle="modal" data-target="#deleteOrder" class="btn btn-danger">Reject</button>
+                </td>
+              }
+
+            }
+
+          </tr>
+        }
+
+      }
+    </table>
+    <table class="table">
+      <tr>
+        <td colspan="9">
+          @{
+            int PrevPageNo = ViewBag.PageNo - 1;
+            if (PrevPageNo <= 0)
+            {
+              PrevPageNo = 1;
+            }
+
+            int NextPageNo = ViewBag.PageNo + 1;
+            if (NextPageNo > ViewBag.NoOfPages)
+            {
+              NextPageNo = ViewBag.NoOfPages;
+            }
+          }
+          <ul class="pagination justify-content-center">
+            <li class="page-item">
+              <a class="page-link text-dark" href="/Artist/ArtistOrders/Orders?=PageNo=@PrevPageNo"><i class="fas fa-angle-double-left"></i></a>
+            </li>
+            @for (int i = 0; i < ViewBag.NoOfPages; i++)
+            {
+              if ((i + 1) == ViewBag.PageNo)
+              {
+                <li class="page-item">
+                  @*faqja aktive*@
+                  <a class="page-link bg-dark text-white" href="/Artist/ArtistOrders/Orders?PageNo=@(i + 1)">@( i + 1)</a>
+                </li>
+              }
+              else
+              {
+                <li class="page-item">
+                  <a class="page-link text-dark" href="/Artist/ArtistOrders/Orders?PageNo=@(i + 1)">@( i + 1)</a>
+                </li>
+              }
+            }
+            <li class="page-item">
+              <a class="page-link text-dark" href="/Artist/ArtistOrders/Orders?PageNo=@NextPageNo"><i class="fas fa-angle-double-right"></i></a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+
+  }
+
+
+</div>
+
+<!-- Delete Order Modal -->
+<div class="modal fade" id="deleteOrder" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <form action="" id="deleteOrderForm">
+          <button type="submit" class="btn btn-danger" id="modalButton"> </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    function AddFormAction(actionUrl, action) {
+      if (action == 'Delete') {
+        document.getElementById('modalBody').innerHTML = 'Are you sure you want to delete the order?';
+        document.getElementById('modalButton').innerHTML = 'Delete Order';
+        document.getElementById('modalTitle').innerHTML = 'Delete Order?';
+      }
+      else {
+        if (action == 'Reject') {
+          document.getElementById('modalBody').innerHTML = 'Are you sure you want to reject the order?';
+          document.getElementById('modalButton').innerHTML = 'Reject';
+          document.getElementById('modalTitle').innerHTML = 'Reject Order?';
+        }
+      }
+      document.getElementById('deleteOrderForm').action = actionUrl;
+    }
+</script>
+

@@ -1,0 +1,16 @@
+C:\Users\user\source\repos\ProjektiPerfundimtarIkub\BuyArt.DomainModels\bin\Debug\BuyArt.DomainModels.dll.config
+C:\Users\user\source\repos\ProjektiPerfundimtarIkub\BuyArt.DomainModels\bin\Debug\BuyArt.DomainModels.dll
+C:\Users\user\source\repos\ProjektiPerfundimtarIkub\BuyArt.DomainModels\bin\Debug\BuyArt.DomainModels.pdb
+C:\Users\user\source\repos\ProjektiPerfundimtarIkub\BuyArt.DomainModels\bin\Debug\EntityFramework.dll
+C:\Users\user\source\repos\ProjektiPerfundimtarIkub\BuyArt.DomainModels\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\user\source\repos\ProjektiPerfundimtarIkub\BuyArt.DomainModels\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+C:\Users\user\source\repos\ProjektiPerfundimtarIkub\BuyArt.DomainModels\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+C:\Users\user\source\repos\ProjektiPerfundimtarIkub\BuyArt.DomainModels\bin\Debug\EntityFramework.xml
+C:\Users\user\source\repos\ProjektiPerfundimtarIkub\BuyArt.DomainModels\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\user\source\repos\ProjektiPerfundimtarIkub\BuyArt.DomainModels\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+C:\Users\user\source\repos\ProjektiPerfundimtarIkub\BuyArt.DomainModels\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+C:\Users\user\source\repos\ProjektiPerfundimtarIkub\BuyArt.DomainModels\obj\Debug\BuyArt.DomainModels.csprojAssemblyReference.cache
+C:\Users\user\source\repos\ProjektiPerfundimtarIkub\BuyArt.DomainModels\obj\Debug\BuyArt.DomainModels.csproj.CoreCompileInputs.cache
+C:\Users\user\source\repos\ProjektiPerfundimtarIkub\BuyArt.DomainModels\obj\Debug\BuyArt.DomainModels.csproj.CopyComplete
+C:\Users\user\source\repos\ProjektiPerfundimtarIkub\BuyArt.DomainModels\obj\Debug\BuyArt.DomainModels.dll
+C:\Users\user\source\repos\ProjektiPerfundimtarIkub\BuyArt.DomainModels\obj\Debug\BuyArt.DomainModels.pdb

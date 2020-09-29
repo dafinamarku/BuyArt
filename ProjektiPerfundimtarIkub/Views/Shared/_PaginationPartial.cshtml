@@ -1,0 +1,43 @@
+﻿<table class="table">
+  <tr>
+    <td colspan="9">
+      @{
+        int PrevPageNo = ViewBag.PageNo - 1;
+        if (PrevPageNo <= 0)
+        {
+          PrevPageNo = 1;
+        }
+
+        int NextPageNo = ViewBag.PageNo + 1;
+        if (NextPageNo > ViewBag.NoOfPages)
+        {
+          NextPageNo = ViewBag.NoOfPages;
+        }
+      }
+      <ul class="pagination justify-content-center">
+        <li class="page-item">
+          <a class="page-link text-dark" href="/Search/Explore?type=@ViewBag.type&name=@ViewBag.name&SortColumn=@ViewBag.SortColumn&IconClass=@ViewBag.IconClass&PageNo=@PrevPageNo"><i class="fas fa-angle-double-left"></i></a>
+        </li>
+        @for (int i = 0; i < ViewBag.NoOfPages; i++)
+        {
+          if ((i + 1) == ViewBag.PageNo)
+          {
+            <li class="page-item">
+              @*faqja aktive*@
+              <a class="page-link bg-dark text-white" href="/Search/Explore?type=@ViewBag.type&name=@ViewBag.name&SortColumn=@ViewBag.SortColumn&IconClass=@ViewBag.IconClass&PageNo=@(i + 1)">@( i + 1)</a>
+            </li>
+          }
+          else
+          {
+            <li class="page-item">
+              <a class="page-link text-dark" href="/Search/Explore?type=@ViewBag.type&name=@ViewBag.name&SortColumn=@ViewBag.SortColumn&IconClass=@ViewBag.IconClass&PageNo=@(i + 1)">@( i + 1)</a>
+            </li>
+          }
+        }
+        <li class="page-item">
+          <a class="page-link text-dark" href="/Search/Explore?type=@ViewBag.type&name=@ViewBag.name&SortColumn=@ViewBag.SortColumn&IconClass=@ViewBag.IconClass&PageNo=@NextPageNo"><i class="fas fa-angle-double-right"></i></a>
+        </li>
+      </ul>
+    </td>
+  </tr>
+</table>

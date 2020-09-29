@@ -1,0 +1,43 @@
+﻿@model BuyArt.DomainModels.Order 
+@{
+    ViewBag.Title = "Order Artwork";
+}
+
+<div class="container">
+  <br />
+  <h2>Order Artwork</h2>
+  <hr />
+  <br />
+  @using (Html.BeginForm("OrderArtwork", "Orders", FormMethod.Post))
+  {
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="ArtworkId" value="@ViewBag.ArtworkId" />
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        @Html.LabelFor(temp => temp.ShipAddress)
+        @Html.TextBoxFor(temp => temp.ShipAddress, new { placeholder = "Ship Adress", @class = "form-control" })
+        @Html.ValidationMessageFor(temp => temp.ShipAddress, "", new { @class = "text-danger" })
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        @Html.LabelFor(temp => temp.ShipCity)
+        @Html.TextBoxFor(temp => temp.ShipCity, new { placeholder = "Ship City", @class = "form-control" })
+        @Html.ValidationMessageFor(temp => temp.ShipCity, "", new { @class = "text-danger" })
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        @Html.LabelFor(temp => temp.RequiredDate)
+        @Html.TextBoxFor(temp => temp.RequiredDate, new { placeholder = "Required Date", @class = "form-control", @type="datetime-local" })
+        @Html.ValidationMessageFor(temp => temp.RequiredDate, "", new { @class = "text-danger" })
+      </div>
+    </div>
+    <div class="form-inline">
+      <button type="submit" class="btn btn-success">Order</button> &nbsp;&nbsp;&nbsp;
+      <a href="/Artwork/Details/@ViewBag.ArtworkId">Cancel</a>
+    </div>
+  }
+</div>
+
+

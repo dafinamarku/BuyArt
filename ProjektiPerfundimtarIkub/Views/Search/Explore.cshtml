@@ -1,0 +1,112 @@
+﻿@model IEnumerable<BuyArt.DomainModels.Artwork>
+
+@{
+  ViewBag.Title = "Explore";
+}
+<div>
+  <br />
+  <h2 class="text-center">Explore</h2>
+</div>
+<hr />
+
+
+<div class="container">
+  <form action="@Url.Action("Explore", "Search")" method="get" id="form1">
+    <div class="float-right form-inline">
+      @Html.TextBox("search", null, new { @class = "form-control", @placeholder = "Search..." }) &nbsp; &nbsp;
+      <input type="hidden" value="@ViewBag.type" name="type" />
+      <input type="hidden" value="@ViewBag.name" name="name" />
+      <button type="submit" class="btn btn-dark">Search</button>
+    </div>
+
+    <div class="form-inline">
+      <h5 class=" float-left">Order By</h5> &nbsp; &nbsp;
+      @if (ViewBag.IconClass == "fas fa-sort-down")
+      {
+        <a onclick="addHiddenFields('fas fa-sort-up', 'Price');" class="btn btn-outline-secondary float-left">
+          Price
+          @if (ViewBag.SortColumn == "Price")
+          {
+            <i class="@ViewBag.IconClass"></i>
+          }
+        </a>
+      }
+      else
+      {
+        <a onclick="addHiddenFields('fas fa-sort-down', 'Price');" class="btn btn-outline-secondary float-left">
+          Price
+          @if (ViewBag.SortColumn == "Price")
+          {
+            <i class="@ViewBag.IconClass"></i>
+          }
+        </a>
+      }
+      &nbsp;&nbsp;
+      @if (ViewBag.IconClass == "fas fa-sort-down")
+      {
+        <a onclick="addHiddenFields('fas fa-sort-up', 'Title');" class="btn btn-outline-secondary float-left">
+          Title
+          @if (ViewBag.SortColumn == "Title")
+          {
+            <i class="@ViewBag.IconClass"></i>
+          }
+        </a>
+      }
+      else
+      {
+        <a onclick="addHiddenFields('fas fa-sort-down', 'Title');" class="btn btn-outline-secondary float-left">
+          Title
+          @if (ViewBag.SortColumn == "Title")
+          {
+            <i class="@ViewBag.IconClass"></i>
+          }
+        </a>
+      }
+    </div>
+  </form>
+  <br />
+</div>
+@if (Model.Count() > 0)
+{
+  <br />
+  <div class="container">
+    <div class="row">
+        @Html.DisplayFor(m=>Model)
+    </div>
+  </div>
+  <br />
+
+  @Html.Partial("_PaginationPartial")
+}
+else
+{
+  <div class="container text-center">
+    <p class="card-text" style="color:cornflowerblue; font-size:larger">
+      There is no artwork.
+    </p>
+  </div>
+}
+<script>
+  //ne baze te butonit te klikuar(Price ose Title) caktohen vlerat per SortColumn dhe IconClass
+  function addHiddenFields(IconClass, SortColumn) {
+
+    var input1 = document.createElement("input");
+    input1.setAttribute("type", "hidden");
+    input1.setAttribute("name", "IconClass");
+    input1.setAttribute("value", IconClass);
+
+    var input2 = document.createElement("input");
+    input2.setAttribute("type", "hidden");
+    input2.setAttribute("name", "SortColumn");
+    input2.setAttribute("value", SortColumn);
+
+    document.getElementById("form1").appendChild(input1);
+    document.getElementById("form1").appendChild(input2);
+
+    document.getElementById("form1").submit();
+  }
+</script>
+
+
+
+

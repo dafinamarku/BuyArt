@@ -1,0 +1,26 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+
+<ul class="navbar-nav ml-auto">
+  @if (User.IsInRole("Customer"))
+  {
+    <li class="nav-item"><a href="/Customer/Cart/MyCart" class="nav-link"><i class="fas fa-shopping-cart text-white"></i> My Cart</a></li>
+    <li class="nav-item"><a href="/Artwork/FavoriteArtworks" class="nav-link"><i class="fas fa-heart text-danger"></i> Favorites</a></li>
+  }
+  else if (User.IsInRole("Artist"))
+  {
+    <li class="nav-item"><a href="/Artist/ArtistOrders/Orders" class="nav-link">Orders</a></li>
+    <li class="nav-item"><a href="/Artwork/FavoriteArtworks" class="nav-link"><i class="fas fa-heart text-danger"></i> Favorites</a></li>
+  }
+  <li><a class="nav-link" href="/Account/Logout">Log out</a></li>
+</ul>
+}
+else
+{
+  <ul class="navbar-nav ml-auto">
+    <li class="nav-item">@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "nav-link" })</li>
+    <li class="nav-item">@Html.ActionLink("Login", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "nav-link" })</li>
+  </ul>
+}
+

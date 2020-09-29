@@ -1,0 +1,98 @@
+﻿@model ProjektiPerfundimtarIkub.ViewModels.ArtworkCreateUpdateViewModel
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "Create";
+}
+<div class="container">
+  <br />
+  <h2>Create New Artwork</h2>
+
+  @using (Html.BeginForm("Create", "Artworks", FormMethod.Post, new { enctype = "multipart/form-data" }))
+  {
+    @Html.AntiForgeryToken()
+    <br />
+    <div class="form">
+      <hr />
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          @Html.LabelFor(model => model.TheArtwork.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+          @Html.EditorFor(model => model.TheArtwork.Title, new { htmlAttributes = new { @class = "form-control" } })
+          @Html.ValidationMessageFor(model => model.TheArtwork.Title, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-6">
+          @Html.LabelFor(model => model.TheArtwork.Photo, htmlAttributes: new { @class = "control-label col-md-2" }) <br />
+          <input type="file" class="file-input" id="file" name="file">
+          @Html.ValidationMessageFor(model => model.TheArtwork.Photo, "", new { @class = "text-danger" })
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          @Html.LabelFor(model => model.TheArtwork.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+          @Html.TextAreaFor(model => model.TheArtwork.Description, new { @class = "form-control" })
+          @Html.ValidationMessageFor(model => model.TheArtwork.Description, "", new { @class = "text-danger" })
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          @Html.LabelFor(m => m.TheArtwork.Price, htmlAttributes: new { @class = "control-label col-md-2" })
+          @Html.TextBoxFor(m => m.TheArtwork.Price, new { @class = "form-control", @placeholder= "lekë", @type = "number", @step = "any" })
+          @Html.ValidationMessageFor(m => m.TheArtwork.Price, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-4">
+          @Html.LabelFor(m => m.TheArtwork.Height, htmlAttributes: new { @class = "control-label col-md-2" })
+          @Html.TextBoxFor(m => m.TheArtwork.Height, new { @class = "form-control", @type="number", @step="any", @placeholder = "cm" })
+          @Html.ValidationMessageFor(m => m.TheArtwork.Height, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-4">
+          @Html.LabelFor(m => m.TheArtwork.Width, htmlAttributes: new { @class = "control-label col-md-2" })
+          @Html.TextBoxFor(m => m.TheArtwork.Width, new { @class = "form-control", @type = "number",  @step = "any", @placeholder = "cm" })
+          @Html.ValidationMessageFor(m => m.TheArtwork.Width, "", new { @class = "text-danger" })
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          @Html.LabelFor(model => model.TheArtwork.ArworkCategory.CategoryName, htmlAttributes: new { @class = "control-label col-md-2" })
+          @Html.DropDownListFor(m=>m.TheArtwork.CategoryId, ViewBag.CategoryId as IEnumerable<SelectListItem>, null, htmlAttributes: new { @class = "form-control" })
+          @Html.ValidationMessageFor(model => model.TheArtwork.CategoryId, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-6">
+          @Html.LabelFor(model => model.TheArtwork.ArtworkSubject.SubjectName, htmlAttributes: new { @class = "control-label col-md-2" })
+          @Html.DropDownListFor(m=>m.TheArtwork.SubjectId,ViewBag.SubjectId as IEnumerable<SelectListItem>, null, htmlAttributes: new { @class = "form-control" })
+          @Html.ValidationMessageFor(model => model.TheArtwork.SubjectId, "", new { @class = "text-danger" })
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-12 form-inline" id="check">
+          <br /><br />
+          @Html.LabelFor(m => m.TheArtworkStyles, htmlAttributes: new { @class = "control-label col-md-2" })
+          @for (int i = 0; i < Model.TheArtworkStyles.Count; i++)
+          {
+            <div>
+              @Html.CheckBoxFor(m => Model.TheArtworkStyles[i].IsSelected)
+              @Html.DisplayFor(m => Model.TheArtworkStyles[i].StyleName, new { @class = "form-check-label" }) &nbsp;&nbsp;
+              @Html.HiddenFor(m => Model.TheArtworkStyles[i].StyleId)
+              @Html.HiddenFor(m => Model.TheArtworkStyles[i].StyleName)
+            </div>
+          }
+          @Html.ValidationMessageFor(m => m.TheArtworkStyles, "", new { @class = "text-danger" })
+        </div>
+      </div>
+
+      <br />
+      <div class="form-group form-row">
+        <div class="col-md-offset-2 col-md-6">
+          <input id="btnSubmit" type="submit" value="+Add Artwork" class="btn btn-lg bg-danger text-white" /> &nbsp; &nbsp;
+          <a href="/CustomerArtist/VisitProfile/@User.Identity.GetUserId()" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+        <div class="form-group text-danger col-md-6">
+          @Html.ValidationSummary()
+        </div>
+      </div>
+    </div>
+  }
+
+</div>
+
+
+

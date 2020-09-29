@@ -1,0 +1,177 @@
+﻿@model IEnumerable<BuyArt.DomainModels.Order>
+@{
+  /**/
+
+  ViewBag.Title = "MyOrders";
+}
+
+<div class="container">
+  <br />
+  @Html.Partial("_Notifications")
+</div>
+
+<div>
+  <br />
+  <h2 class="text-center">My Orders</h2>
+</div>
+<hr />
+
+<div class="container">
+  <form action="@Url.Action("MyOrders", "Orders")" method="get" id="form1">
+    <div class="float-right form-inline">
+      @Html.TextBox("search", null, new { @class = "form-control", @placeholder = "Search..." }) &nbsp; &nbsp;
+      <button type="submit" class="btn btn-dark">Search</button>
+    </div>
+  </form>
+  <br /><br /><br />
+  @if (Model.Count() == 0)
+  {
+    <div class="text-center">
+      <p class="card-text" style="color:cornflowerblue; font-size:larger">
+        You have no order.
+      </p>
+    </div>
+  }
+  else
+  {
+    <table class="table table-hover">
+      <tr>
+        <th>Artwork Title</th>
+        <th>@Html.DisplayNameFor(m => m.OrderedArtwork.Price)</th>
+        <th>@Html.DisplayNameFor(m => m.RequiredDate)</th>
+        <th>@Html.DisplayNameFor(m => m.OrderStatus)</th>
+        <th></th>
+      </tr>
+      @foreach (var i in Model)
+      {
+        if (i.OrderStatus == "Delivered")
+        {
+          <tr>
+            <td>@Html.DisplayFor(m => i.OrderedArtwork.Title)</td>
+            <td>@Html.DisplayFor(m => i.OrderedArtwork.Price) leke</td>
+            <td>@Html.DisplayFor(m => i.RequiredDate)</td>
+            <td class="text-success font-weight-bolder">
+              @Html.DisplayFor(m => i.OrderStatus)
+              <i class="fas fa-check fa-2x"></i>
+            </td>
+            <td>
+              <a href="/Customer/Orders/OrderDetails/@i.OrderID" class="btn btn-info">Details</a>
+            </td>
+          </tr>
+        }
+        else if (i.OrderStatus == "Rejected")
+        {
+          <tr class="bg-danger text-white">
+            <td>@Html.DisplayFor(m => i.OrderedArtwork.Title)</td>
+            <td>@Html.DisplayFor(m => i.OrderedArtwork.Price) leke</td>
+            <td>@Html.DisplayFor(m => i.RequiredDate)</td>
+            <td class="font-weight-bolder">
+              @Html.DisplayFor(m => i.OrderStatus)
+            </td>
+            <td>
+              <a href="/Customer/Orders/OrderDetails/@i.OrderID" class="btn btn-info">Details</a>
+            </td>
+          </tr>
+        }
+        else
+        {
+          <tr>
+            <td>@Html.DisplayFor(m => i.OrderedArtwork.Title)</td>
+            <td>@Html.DisplayFor(m => i.OrderedArtwork.Price) leke</td>
+            <td>@Html.DisplayFor(m => i.RequiredDate)</td>
+            @if (i.OrderStatus == "Delivering")
+            {
+              <td class="text-info font-weight-bolder">
+                @Html.DisplayFor(m => i.OrderStatus)
+                <img src="~/Content/PhotoDesign/delivering.gif" style="width:60px;" />
+              </td>
+            }
+            else
+            {
+              <td class="font-weight-bolder">@Html.DisplayFor(m => i.OrderStatus)</td>
+            }
+            <td>
+              <a href="/Customer/Orders/OrderDetails/@i.OrderID" class="btn btn-info">Details</a>
+              <button type="button" onclick="AddFormAction('/Customer/Orders/CancelOrder/'+@i.OrderID)" data-target="#cancelOrder" data-toggle="modal" class="btn btn-danger">Cancel Order</button>
+            </td>
+          </tr>
+        }
+
+      }
+    </table>
+    <table class="table">
+      <tr>
+        <td colspan="9">
+          @{
+            int PrevPageNo = ViewBag.PageNo - 1;
+            if (PrevPageNo <= 0)
+            {
+              PrevPageNo = 1;
+            }
+
+            int NextPageNo = ViewBag.PageNo + 1;
+            if (NextPageNo > ViewBag.NoOfPages)
+            {
+              NextPageNo = ViewBag.NoOfPages;
+            }
+          }
+          <ul class="pagination justify-content-center">
+            <li class="page-item">
+              <a class="page-link text-dark" href="/Customer/Orders/MyOrders?=PageNo=@PrevPageNo"><i class="fas fa-angle-double-left"></i></a>
+            </li>
+            @for (int i = 0; i < ViewBag.NoOfPages; i++)
+            {
+              if ((i + 1) == ViewBag.PageNo)
+              {
+                <li class="page-item">
+                  @*faqja aktive*@
+                  <a class="page-link bg-dark text-white" href="/Customer/Orders/MyOrders?PageNo=@(i + 1)">@( i + 1)</a>
+                </li>
+              }
+              else
+              {
+                <li class="page-item">
+                  <a class="page-link text-dark" href="/Customer/Orders/MyOrders?PageNo=@(i + 1)">@( i + 1)</a>
+                </li>
+              }
+            }
+            <li class="page-item">
+              <a class="page-link text-dark" href="/Customer/Orders/MyOrders?PageNo=@NextPageNo"><i class="fas fa-angle-double-right"></i></a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+
+  }
+
+
+</div>
+
+<!-- Cancel Order Modal -->
+<div class="modal fade" id="cancelOrder" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cancel Order?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to cancel the order?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <form action="" id="cancelOrderForm" method="post">
+          <button type="submit" class="btn btn-danger">Cancel Order</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    function AddFormAction(actionUrl) {
+      document.getElementById('cancelOrderForm').action = actionUrl;
+    }
+</script>

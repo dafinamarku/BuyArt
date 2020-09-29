@@ -1,0 +1,29 @@
+﻿@model BuyArt.DomainModels.Subject
+@{
+  ViewBag.Title = "Delete";
+}
+
+<br />
+<h2>Do you want to delete this subject?</h2>
+@using (Html.BeginForm("Delete", "Subject", FormMethod.Post))
+{
+  @Html.HiddenFor(m => m.SubjectId)
+  <div class="container">
+    <ul>
+      <li>
+        @Html.LabelFor(m => m.SubjectId):
+        @Html.DisplayFor(m => m.SubjectId)
+      </li>
+      <li>
+        @Html.LabelFor(m => m.SubjectName):
+        @Html.DisplayFor(m => m.SubjectName)
+      </li>
+    </ul>
+
+    <button type="submit" class="btn btn-danger">Delete</button>
+    @Html.ActionLink("Cancel", "Index", "Subject", new { @class = "btn btn-light" })
+  </div>
+}
+
+
+

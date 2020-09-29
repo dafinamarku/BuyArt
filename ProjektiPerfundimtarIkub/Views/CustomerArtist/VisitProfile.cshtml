@@ -1,0 +1,225 @@
+﻿@model ProjektiPerfundimtarIkub.ViewModels.ArtistProfileViewModel
+@using Microsoft.AspNet.Identity
+@using BuyArt.DataLayer
+@{
+  ViewBag.Title = "VisitProfile";
+}
+<link href="~/Styles/Profili/responsive.css" rel="stylesheet" />
+<link href="~/Styles/Profili/styles.css" rel="stylesheet" />
+<style>
+
+  img {
+    margin: 5px;
+    padding: 5px;
+  }
+
+  .flex-column {
+    max-width: 260px;
+  }
+</style>
+<br />
+<div class="container">
+  @Html.Partial("_Notifications")
+</div>
+
+<section>
+  <div class="container">
+    <div class="row">
+      <h4><b>@Model.user.UserName </b> </h4>
+    </div>
+    <div class="row">
+      <h4><b>EMAIL : </b>@Model.user.Email </h4>
+    </div>
+  </div><!-- container -->
+</section><!-- intro-section -->
+<br />
+<div class="container">
+  <div class="row">
+    <ul class="list-group list-group-horizontal" style="text-align:center;">
+      <li class="list-group-item list-group-item-action list-group-item-light">
+        <button type="button" data-toggle="modal" data-target="#FollowingList" class="nav-link">
+          <b>Following</b><br /> @Model.nrfollowing
+        </button>
+      </li>
+      <li class="list-group-item list-group-item-action list-group-item-light">
+        <button type="button" data-toggle="modal" data-target="#FollowersList" class="nav-link">
+          <b>Followers</b><br /> @Model.nrfollowers
+        </button>
+      </li>
+    </ul>
+  </div>
+  <br />
+  <div class="row">
+    <div class="col">
+      @*ne kete rast useri po viziton profilin e tij*@
+      @if (ViewBag.VisitorId == Model.user.Id)
+      {
+        <a href="/Artist/Artworks/Create" class="btn btn-lg bg-danger text-white">+ Add New Artwork</a>
+          <a href="/CustomerArtist/EditProfile" class="btn btn-dark btn-lg fa-pull-right"><i class="fas fa-user-edit"></i></a>
+      }
+      else
+      {
+        @*ne kete rast useri i loguar e ndjek perdoruesin qe po viziton dhe duhet te shfaqet butoni Unfollow*@
+        if (Model.user.Followers.Where(x => x.Id == ViewBag.VisitorId).Count() == 1)
+        {
+          <a href="/CustomerArtist/FollowUnfollowUser/@Model.user.Id" class="btn bg-dark text-white">Unfollow</a>
+        }
+        else
+        {
+          <a href="/CustomerArtist/FollowUnfollowUser/@Model.user.Id" class="btn bg-dark text-white">Follow</a>
+        }
+
+      }
+    </div>
+  </div>
+</div>
+<!-- Seksioni i Bio-s afishohet vetem ku ajo nuk eshte null -->
+@if (Model.user.Bio != null)
+{
+  <section class="about-section section">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="heading">
+            <h3><b>Bio</b></h3>
+          </div>
+        </div>
+        <div class="col-sm-8">
+          <p class="margin-b-50">
+            @Model.user.Bio
+          </p>
+        </div><!-- col-sm-8 -->
+      </div><!-- row -->
+    </div><!-- container -->
+  </section><!-- about-section -->
+}
+
+
+<section class="portfolio-section section">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="heading">
+          <h3><b>Artworks</b></h3>
+        </div>
+      </div><!-- col-sm-4 -->
+    </div><!-- row -->
+  </div><!-- container -->
+
+  <div class="portfolioContainer">
+
+    <div class="container">
+      <div class="row">
+        @foreach (var veper in Model.user.Artworks.OrderByDescending(a=>a.ArtworkId))
+        {
+          <div class="row">
+            <div class="col">
+              <div class="card" style="width: 20rem; border:none;">
+                <a href="/Artwork/Details/@veper.ArtworkId">
+                  <img src="~/Content/Images/Artworks/@(veper.Photo)" style="max-width:100%; max-height:500px" class="card-img-top" alt="...">
+                </a>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+  </div><!-- portfolioContainer -->
+
+</section><!-- portfolio-section -->
+@{ string currentUid = User.Identity.GetUserId();
+  ProjectContext db = new ProjectContext();
+  ApplicationUserStore ustore = new ApplicationUserStore(db);
+  ApplicationUserManager uManager = new ApplicationUserManager(ustore);
+}
+<!-- Followers Modal -->
+<div class="modal fade" id="FollowersList" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Followers</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        @if (Model.user.Followers.Count == 0)
+        {
+          <div style="color:cornflowerblue;">0 Followers</div>
+        }
+        else
+        {
+          <table class="table table-hover">
+            @foreach (var f in Model.user.Followers)
+            {
+              <tr>
+                <td>
+                  @f.UserName
+                </td>
+                @if (f.Id == currentUid)
+                {
+                  <td><a href="/CustomerArtist/VisitProfile/@f.Id">My Profile</a></td>
+                }
+                else if(uManager.IsInRole(f.Id, "Artist"))
+                {
+                  <td><a href="/CustomerArtist/VisitProfile/@f.Id">Visit Profile</a></td>
+                }
+                else //ne kete rast useri eshte ne rolin cutomer
+                {
+                  <td></td>
+                }
+              </tr>
+            }
+          </table>
+        }
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Following Modal -->
+<div class="modal fade" id="FollowingList" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Following</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        @if (Model.user.Following.Count == 0)
+        {
+          <div style="color:cornflowerblue;">0 Following</div>
+        }
+        else
+        {
+          <table class="table table-hover">
+            @foreach (var f in Model.user.Following)
+            {
+              <tr>
+                <td>
+                  @f.UserName
+                </td>
+                @if (f.Id == User.Identity.GetUserId())
+                {
+                  <td><a href="/CustomerArtist/VisitProfile/@f.Id">My Profile</a></td>
+                }
+                else
+                {
+                  <td><a href="/CustomerArtist/VisitProfile/@f.Id">Visit Profile</a></td>
+                }
+              </tr>
+            }
+          </table>
+        }
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

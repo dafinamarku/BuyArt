@@ -1,0 +1,60 @@
+﻿@model IEnumerable<BuyArt.DomainModels.Artwork>
+
+@{
+  ViewBag.Title = "My Cart";
+}
+
+<div>
+  <br />
+  <h2 class="text-center">My Cart</h2>
+</div>
+<hr />
+@if (Model.Count() == 0)
+{
+  <div class="container text-center">
+    <p class="card-text" style="color:cornflowerblue; font-size:larger">
+      You have no artwork in your cart.
+    </p>
+  </div>
+}
+else
+{
+  <div class="container">
+    @foreach (var i in Model)
+    {
+      <div class="row">
+        <div class="row">
+          <div class="col" style="margin:20px">
+            <div class="card" style="width: 20rem; padding:5px;">
+              <img src="/Content/Images/Artworks/@i.Photo" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h3 class="card-title"><b>@i.Title</b></h3>
+                @if (i.AvailabilityStatus == true)
+                {
+                  <h4 class="float-right text-success font-weight-bolder">@i.Price lekë</h4>
+                }
+                else
+                {
+                  <h4 class="float-right text-danger font-weight-bolder">SOLD</h4>
+                }
+                <p class="card-text">
+                  <h6>@i.ArworkCategory.CategoryName by @i.Artist.UserName</h6>
+                </p>
+                <hr />
+                @Html.ActionLink("Details", "Details", "Artwork", new { id = i.ArtworkId }, new { @class = "btn btn-dark" })
+                @if (!User.IsInRole("Admin") && !User.IsInRole("Artist") && i.AvailabilityStatus == false)
+                {
+                  <a href="#" class="btn btn-warning text-white fa-pull-right">Remove from Cart </a>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+    }
+
+
+  </div>
+}
+

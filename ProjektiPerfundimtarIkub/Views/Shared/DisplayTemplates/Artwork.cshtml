@@ -1,0 +1,30 @@
+﻿@model BuyArt.DomainModels.Artwork
+
+
+<div class="row">
+  <div class="col" style="margin:20px">
+    <div class="card" style="width: 20rem; padding:5px;">
+      <img src="/Content/Images/Artworks/@Model.Photo" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h3 class="card-title"><b>@Model.Title</b></h3>
+        @if (Model.AvailabilityStatus == true)
+        {
+          <h4 class="float-right text-success font-weight-bolder">@Model.Price lekë</h4>
+        }
+        else
+        {
+          <h4 class="float-right text-danger font-weight-bolder">SOLD</h4>
+        }
+        <p class="card-text">
+          <h6>@Model.ArworkCategory.CategoryName by @Model.Artist.UserName</h6>
+        </p>
+        <hr />
+          @Html.ActionLink("Details", "Details", "Artwork", new { id = Model.ArtworkId }, new { @class = "btn btn-dark" })
+          @if (!User.IsInRole("Admin") && !User.IsInRole("Artist")&& Model.AvailabilityStatus == true)
+          {
+            <a href="/Customer/Cart/AddArtworkToMyCart/@Model.ArtworkId" class="btn btn-warning text-white fa-pull-right"><i class="fas fa-shopping-cart"></i> Add to Cart </a>
+          }
+      </div>
+    </div>
+  </div>
+</div>

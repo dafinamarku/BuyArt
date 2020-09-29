@@ -1,0 +1,36 @@
+﻿@model IEnumerable<BuyArt.DomainModels.ApplicationUser>
+@{
+  ViewBag.Title = "Index";
+}
+
+<br />
+@Html.ActionLink("Create", "Create", "Users", new { @class = "btn btn-primary" })
+<br />
+<br />
+<h2>List of users</h2>
+<br />
+<div class="container">
+  <table class="table">
+    <tr>
+      <th>Users Name</th>
+      <th>Email</th>
+      <th>Actions</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+      <tr>
+        <td>@item.UserName</td>
+        <td>@item.Email</td>
+        <td>
+          @Html.ActionLink("Details", "Details", new { @id = item.Id})
+          <form action="/Admin/Users/Delete/@item.Id" method="post">
+            <button type="submit" onclick="return confirm('Are you sure you want to delete @item.UserName?');" class="page-link" style="border:none;">Delete</button>
+          </form>
+        </td>
+      </tr>
+    }
+  </table>
+</div>
+
+
+

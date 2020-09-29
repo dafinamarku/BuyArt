@@ -1,0 +1,29 @@
+﻿@model BuyArt.DomainModels.Order
+
+<div class="card  mx-1" style="width: 30rem;">
+  <div class="card-body">
+    <h5 class="card-title"><a href="/Artwork/Details/@Model.OrderedArtwork.ArtworkId">@Model.OrderedArtwork.Title</a></h5>
+    <p class="card-text">
+      <b>@Html.DisplayNameFor(m => m.ShipAddress)</b>: @Html.DisplayFor(m => m.ShipAddress)<br />
+      <b>@Html.DisplayNameFor(m => m.ShipCity)</b>: @Html.DisplayFor(m => m.ShipCity)<br />
+      <b>@Html.DisplayNameFor(m => m.OrderDate)</b>: @Html.DisplayFor(m => m.OrderDate)<br />
+      <b>@Html.DisplayNameFor(m => m.RequiredDate)</b>: @Html.DisplayFor(m => m.RequiredDate)<br />
+      <b>@Html.DisplayNameFor(m => m.DeliveredDate)</b>: @Html.DisplayFor(m => m.DeliveredDate)<br />
+      <b>Customer Username</b>: @Html.DisplayFor(m => m.Customer.UserName)<br />
+      <b>@Html.DisplayNameFor(m => m.OrderStatus)</b>: @Html.DisplayFor(m => m.OrderStatus)
+
+
+      @if (Model.OrderStatus == "Delivering")
+      {
+        <img src="~/Content/PhotoDesign/delivering.gif" style="width:60px;" /><br />
+      }
+      else if (Model.OrderStatus == "Delivered")
+      {
+        <i class="fas fa-check fa-2x"></i><br />
+      }
+      <b>@Html.DisplayNameFor(m => m.RequiredDate)</b>: @Html.DisplayFor(m => m.RequiredDate)<br />
+
+    </p>
+   
+  </div>
+</div>

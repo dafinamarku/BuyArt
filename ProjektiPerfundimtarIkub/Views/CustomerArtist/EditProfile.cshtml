@@ -1,0 +1,52 @@
+﻿@model ProjektiPerfundimtarIkub.ViewModels.EditProfileViewModel
+  @using Microsoft.AspNet.Identity
+@{
+  ViewBag.Title = "EditProfile";
+}
+<div class="container">
+  <br />
+  <h2>Edit Profile</h2>
+  @using (Html.BeginForm("EditProfile", "CustomerArtist", FormMethod.Post))
+  {@Html.AntiForgeryToken()
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      @Html.LabelFor(temp => temp.Username)
+      @Html.TextBoxFor(temp => temp.Username, new { placeholder = "Username", @class = "form-control" })
+      @Html.ValidationMessageFor(temp => temp.Username, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group col-md-6">
+      @Html.LabelFor(temp => temp.Password)
+      @Html.PasswordFor(temp => temp.Password, new { placeholder = "Blank to leave unchanged", @class = "form-control" })
+      @Html.ValidationMessageFor(temp => temp.Password, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group col-md-6">
+      @Html.LabelFor(temp => temp.ConfirmPassword)
+      @Html.PasswordFor(temp => temp.ConfirmPassword, new { placeholder = "Confirm Password", @class = "form-control" })
+      @Html.ValidationMessageFor(temp => temp.ConfirmPassword, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group col-md-6">
+      @Html.LabelFor(temp => temp.Email)
+      @Html.TextBoxFor(temp => temp.Email, new { placeholder = "Email", @class = "form-control" })
+      @Html.ValidationMessageFor(temp => temp.Email, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group col-md-6">
+      @Html.LabelFor(temp => temp.Bio)
+      @Html.TextAreaFor(temp => temp.Bio, new { placeholder = "Bio", @class = "form-control" })
+      @Html.ValidationMessageFor(temp => temp.Bio, "", new { @class = "text-danger" })
+    </div>
+
+  </div>
+  <div class="text-danger">
+    @Html.ValidationSummary()
+  </div>
+
+  <button type="submit" class="btn btn-success">Edit</button> <br /><br />
+  @Html.ActionLink("Cancel", "VisitProfile", new { @id = User.Identity.GetUserId() })
+}
+
+
+
+
+</div>

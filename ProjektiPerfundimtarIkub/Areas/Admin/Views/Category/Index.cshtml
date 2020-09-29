@@ -1,0 +1,32 @@
+﻿@model IEnumerable<BuyArt.DomainModels.Category>
+
+@{
+    ViewBag.Title = "Index";
+}
+<br />
+@Html.ActionLink("Create", "Create", "Category", new { @class="btn btn-primary"})
+<br />
+<br />
+<h2>List of Categories</h2>
+<br />
+<div class="container">
+  <table class="table">
+    <tr>
+      <th>Category Id</th>
+      <th>Category Name</th>
+      <th>Actions</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+      <tr>
+        <td>@item.CategoryId</td>
+        <td>@item.CategoryName</td>
+        <td>
+          @Html.ActionLink("Edit", "Edit", new { @id=item.CategoryId})
+          @Html.ActionLink("Delete", "Delete", new { @id = item.CategoryId })
+        </td>
+      </tr>
+    }
+  </table>
+</div>
+
